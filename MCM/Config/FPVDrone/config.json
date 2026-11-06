@@ -1,0 +1,299 @@
+{
+  "modName": "FPVDrone",
+  "displayName": "FPV Drone",
+  "minMcmVersion": 2,
+  "content": [
+    {
+      "type": "section",
+      "text": "Drone controls"
+    },
+    {
+      "type": "text",
+      "text": "0.1.36 | Direct stick throttle: down 0%, center 50%, up 100% | Keyboard/mouse, gamepad and USB FPV controller | F10 emergency cancel. Restart after updating."
+    },
+    {
+      "type": "section",
+      "text": "Устройство управления полётом"
+    },
+    {
+      "id": "iDeviceChoice:Controllers",
+      "type": "dropdown",
+      "text": "Устройство",
+      "help": "Клавиатура/мышь и обнаруженные компьютером контроллеры. DirectInput сохраняется по GUID устройства; Xbox/XInput — по слоту №1–4, который может измениться после переподключения. Устройство и настройки осей применяются к следующему полёту. Отключение выбранного контроллера во время полёта завершает его без взрыва. F10 остаётся аварийной отменой.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "listFromProperty": {
+          "form": "FPVDrone.esp|800",
+          "scriptName": "FPVDroneQuestScript",
+          "propertyName": "FPVTransitionControllerDevices"
+        }
+      }
+    },
+    {
+      "type": "text",
+      "text": "Состояние устройств",
+      "textFromStringProperty": {
+        "form": "FPVDrone.esp|800",
+        "scriptName": "FPVDroneQuestScript",
+        "propertyName": "FPVTransitionControllerStatus"
+      }
+    },
+    {
+      "id": "RefreshControllers",
+      "type": "button",
+      "text": "Обновить список устройств",
+      "help": "Обновить список после подключения или отключения геймпада/USB-пульта. Клавиатура и мышь доступны независимо от наличия контроллеров.",
+      "action": {
+        "type": "CallFunction",
+        "form": "FPVDrone.esp|800",
+        "function": "FPVTransitionRefreshControllers"
+      }
+    },
+    {
+      "id": "iControllerLayout:Controllers",
+      "type": "dropdown",
+      "text": "Раскладка осей",
+      "help": "Автоматический режим назначает оси, инверсию и прямой газ для обнаруженного Xbox/XInput или DualShock 4. У DualShock 4 правый стик — Z/Rz, а Rx/Ry — курки. Показанные ниже оси соответствуют фактическому назначению. Для USB FPV-пультов и собственных назначений выбери ручной режим. Кнопки подрыва и отмены сохраняются отдельно. Изменения применяются к следующему полёту.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["Автоматически (Xbox / DualShock 4)", "Вручную (FPV / другие устройства)"]
+      }
+    },
+    {
+      "id": "ApplyControllerLayout",
+      "type": "button",
+      "text": "Применить раскладку осей",
+      "help": "Повторно применить автоматическое назначение осей, инверсии и прямого газа выбранного геймпада. В ручном режиме назначения сохраняются. Для FPV-пульта выбери ручной режим и укажи каналы самостоятельно; при необходимости откалибруй устройство в Windows.",
+      "action": {
+        "type": "CallFunction",
+        "form": "FPVDrone.esp|800",
+        "function": "FPVTransitionApplyControllerLayout"
+      }
+    },
+    {
+      "type": "text",
+      "text": "Mode 2: левый стик управляет газом/рысканьем, правый — креном/тангажом. Xbox: X/Y и Rx/Ry; DualShock 4: X/Y и Z/Rz. У USB FPV-пультов порядок каналов различается: используй ручную раскладку. Остальная игра может оставаться на клавиатуре и мыши."
+    },
+    {
+      "type": "section",
+      "text": "Оси контроллера"
+    },
+    {
+      "id": "iThrottleAxis:Controllers",
+      "type": "dropdown",
+      "text": "Ось газа",
+      "help": "Mode 2: вертикальная ось левого стика, Y у Xbox. Для FPV-пульта выбери фактический канал газа. Настройка применяется к следующему полёту.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["X", "Y", "Z", "Rx", "Ry", "Rz", "Slider 0", "Slider 1"]
+      }
+    },
+    {
+      "id": "bInvertThrottle:Controllers",
+      "type": "switcher",
+      "text": "Инвертировать газ",
+      "help": "Меняет направление оси газа. Проверь направление и положение минимального газа перед полётом.",
+      "valueOptions": {
+        "sourceType": "ModSettingBool"
+      }
+    },
+    {
+      "id": "iYawAxis:Controllers",
+      "type": "dropdown",
+      "text": "Ось рысканья",
+      "help": "Mode 2: горизонтальная ось левого стика, X у Xbox. У USB-пульта назначь соответствующий канал.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["X", "Y", "Z", "Rx", "Ry", "Rz", "Slider 0", "Slider 1"]
+      }
+    },
+    {
+      "id": "bInvertYaw:Controllers",
+      "type": "switcher",
+      "text": "Инвертировать рысканье",
+      "valueOptions": {
+        "sourceType": "ModSettingBool"
+      }
+    },
+    {
+      "id": "iRollAxis:Controllers",
+      "type": "dropdown",
+      "text": "Ось крена",
+      "help": "Mode 2: горизонтальная ось правого стика, Rx у Xbox. У USB-пульта назначь соответствующий канал.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["X", "Y", "Z", "Rx", "Ry", "Rz", "Slider 0", "Slider 1"]
+      }
+    },
+    {
+      "id": "bInvertRoll:Controllers",
+      "type": "switcher",
+      "text": "Инвертировать крен",
+      "valueOptions": {
+        "sourceType": "ModSettingBool"
+      }
+    },
+    {
+      "id": "iPitchAxis:Controllers",
+      "type": "dropdown",
+      "text": "Ось тангажа",
+      "help": "Mode 2: вертикальная ось правого стика, Ry у Xbox. У USB-пульта назначь соответствующий канал.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["X", "Y", "Z", "Rx", "Ry", "Rz", "Slider 0", "Slider 1"]
+      }
+    },
+    {
+      "id": "bInvertPitch:Controllers",
+      "type": "switcher",
+      "text": "Инвертировать тангаж",
+      "valueOptions": {
+        "sourceType": "ModSettingBool"
+      }
+    },
+    {
+      "id": "iThrottleMode:Controllers",
+      "type": "dropdown",
+      "text": "Режим газа",
+      "help": "По умолчанию газ напрямую соответствует положению стика: вниз 0%, центр 50%, вверх 100%. После отпускания стика газ возвращается к 50%, без накопления. Учитывается выбранная инверсия. Старый накопительный режим можно выбрать отдельно. Изменение применяется к следующему полёту; клавиатурные W/S работают по-прежнему.",
+      "valueOptions": {
+        "sourceType": "ModSettingInt",
+        "options": ["Накопительный (старый режим)", "Положение стика — прямой газ"]
+      }
+    },
+    {
+      "id": "fDeadZone:Controllers",
+      "type": "slider",
+      "text": "Мёртвая зона стиков, %",
+      "help": "Игнорирует небольшие отклонения около центра. По умолчанию 5%. Диапазон 0–30%; значение передаётся в процентах. Применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "type": "section",
+      "text": "Чувствительность контроллера"
+    },
+    {
+      "id": "fYawRate:Controllers",
+      "type": "slider",
+      "text": "Рысканье контроллера, %",
+      "help": "Множитель реакции на ось рысканья. По умолчанию 100%; применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 10,
+        "max": 300,
+        "step": 5,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "id": "fRollRate:Controllers",
+      "type": "slider",
+      "text": "Крен контроллера, %",
+      "help": "Множитель реакции на ось крена. По умолчанию 100%; применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 10,
+        "max": 300,
+        "step": 5,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "id": "fPitchRate:Controllers",
+      "type": "slider",
+      "text": "Тангаж контроллера, %",
+      "help": "Множитель реакции на ось тангажа. По умолчанию 100%; применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 10,
+        "max": 300,
+        "step": 5,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "type": "section",
+      "text": "Кнопки контроллера"
+    },
+    {
+      "type": "text",
+      "text": "Нумерация кнопок начинается с 1; 0 отключает действие. Xbox: 1 A, 2 B, 3 X, 4 Y, 5 LB, 6 RB, 7 Back, 8 Start, 9 левый стик, 10 правый стик, 11/12/13/14 крестовина вверх/вниз/влево/вправо. У DirectInput-пультов номера зависят от устройства."
+    },
+    {
+      "id": "iDetonateButton:Controllers",
+      "type": "slider",
+      "text": "Кнопка подрыва",
+      "help": "Номер кнопки 1–128, либо 0 для отключения. По умолчанию 1 (A у Xbox). Изменение применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 0,
+        "max": 128,
+        "step": 1,
+        "sourceType": "ModSettingInt"
+      }
+    },
+    {
+      "id": "iAbortButton:Controllers",
+      "type": "slider",
+      "text": "Кнопка отмены",
+      "help": "Номер кнопки 1–128, либо 0 для отключения. По умолчанию 2 (B у Xbox). Отмена завершает полёт без взрыва; F10 доступна независимо от выбранного контроллера. Изменение применяется к следующему полёту.",
+      "valueOptions": {
+        "min": 0,
+        "max": 128,
+        "step": 1,
+        "sourceType": "ModSettingInt"
+      }
+    },
+    {
+      "type": "section",
+      "text": "Чувствительность клавиатуры и мыши"
+    },
+    {
+      "id": "fYawSensitivity:Controls",
+      "type": "slider",
+      "text": "Рысканье A/D (ф/в), %",
+      "help": "Скорость поворота влево и вправо. 55% — новое значение по умолчанию, на 45% ниже прежнего; 100% возвращает прежнюю скорость. Изменение сохраняется и применяется без перезапуска полёта.",
+      "valueOptions": {
+        "min": 10,
+        "max": 200,
+        "step": 5,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "id": "fMouseSensitivity:Controls",
+      "type": "slider",
+      "text": "Чувствительность мыши, %",
+      "help": "Чувствительность крена и тангажа. 100% сохраняет прежнее управление мышью. Изменение сохраняется и применяется без перезапуска полёта.",
+      "valueOptions": {
+        "min": 10,
+        "max": 300,
+        "step": 5,
+        "sourceType": "ModSettingFloat"
+      }
+    },
+    {
+      "id": "CancelFlight",
+      "type": "button",
+      "text": "Cancel flight",
+      "help": "End the flight and restore the player camera and controls.",
+      "action": {
+        "type": "CallFunction",
+        "form": "FPVDrone.esp|800",
+        "function": "AbortFlight"
+      }
+    },
+    {
+      "id": "Diagnostics",
+      "type": "button",
+      "text": "Diagnostics",
+      "help": "Show the current drone state and dependency checks.",
+      "action": {
+        "type": "CallFunction",
+        "form": "FPVDrone.esp|800",
+        "function": "Diagnose"
+      }
+    }
+  ]
+}

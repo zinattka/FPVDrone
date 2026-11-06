@@ -1,0 +1,12 @@
+# Preserve exact bytes: SHA-256 manifests and bytecode regression checks depend on them.
+* -text
+
+*.dll binary
+*.esp binary
+*.pex binary
+*.seq binary
+*.swf binary
+*.nif binary
+*.bgsm binary
+*.dds binary
+*.wav binary
