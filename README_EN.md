@@ -2,7 +2,7 @@
 
 A craftable, consumable FPV drone for **Fallout 4 1.10.163 (Old-Gen), Windows x64**.
 Next-Gen, Anniversary and VR are not supported by this build. No DLC required.
-Russian instructions: [README.md](README.md).
+Russian instructions: [README_RU.md](README_RU.md).
 
 This working copy includes an experimental 3D FPV viewmodel: propellers,
 motor housings and RPG charge extracted from the game NIF with original

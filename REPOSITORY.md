@@ -5,10 +5,6 @@ taken on **2026-11-06**. Its base version is **0.1.40**, with the experimental
 3D viewmodel work described in [CHANGELOG.md](CHANGELOG.md) and
 [Source/Viewmodel/README.md](Source/Viewmodel/README.md).
 
-Это снимок основной рабочей папки мода в Mod Organizer 2, а не старой копии
-из Documents. Базовая версия — **0.1.40**, включая текущую экспериментальную
-работу над 3D-визуалом. Статус проверки в игре указан в документации мода.
-
 The original working folder was left unchanged. The publication snapshot
 contains the runtime files, available sources, tools, documentation, original
 model assets and the small baseline inputs needed by the build/regression tools.
@@ -17,7 +13,7 @@ and personal MCM settings are excluded.
 
 ## Build and use
 
-- Installation and requirements: [Russian](README.md), [English](README_EN.md).
+- Installation and requirements: [English](README.md), [Russian](README_RU.md).
 - Controller input: [Source/Controllers/README.md](Source/Controllers/README.md).
 - Papyrus fragment and merge: [Source/LaunchTransition/README.md](Source/LaunchTransition/README.md).
 - FPV visuals: [Source/Visuals/README.md](Source/Visuals/README.md).
