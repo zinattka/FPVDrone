@@ -1,19 +1,29 @@
 """Independent binary/mesh/ABI checks; never executes Fallout's game code."""
 from pathlib import Path
-import ctypes,hashlib,json,re,sys,struct
+import argparse,ctypes,hashlib,json,os,re,sys
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'_build/visuals3d'
-sys.path[:0]=[str(ROOT/'_analysis'),str(ROOT/'_build/deps/pynifly')]
-from visual_3d_engine_probe import PE,Cs,CS_ARCH_X86,CS_MODE_64
+sys.path.insert(0,str(ROOT/'_build/deps/python'))
+from pe_image import PEImage
+from capstone import Cs,CS_ARCH_X86,CS_MODE_64
 from capstone.x86 import X86_OP_MEM,X86_REG_RIP,X86_GRP_JUMP,X86_GRP_CALL
-from pyn.pynifly import NifFile
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 checks=[]
 def check(ok,text):assert ok,text;checks.append(text)
 def main():
+    global OUT
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--game-root',type=Path,default=Path(os.environ['FALLOUT4_ROOT']) if os.environ.get('FALLOUT4_ROOT') else None)
+    parser.add_argument('--pynifly-root',type=Path,default=Path(os.environ.get('FPV_PYNIFLY_ROOT',str(ROOT/'_build/deps/pynifly'))))
+    parser.add_argument('--build-dir',type=Path,default=OUT)
+    args=parser.parse_args()
+    if args.game_root is None:parser.error('Supply --game-root or set FALLOUT4_ROOT to the Fallout 4 installation directory.')
+    OUT=args.build_dir
+    sys.path.insert(0,str(args.pynifly_root.resolve()))
+    from pyn.pynifly import NifFile
     source=(ROOT/'Source/Viewmodel/viewmodel.cpp').read_text()
     def constant(name):return int(re.search(r'\b'+name+r'=(0x[0-9a-f]+)',source)[1],16)
     def signature(name):return bytes(int(v.strip(),0) for v in re.search(name+r'\[\]=\{([^}]+)',source)[1].split(','))
-    game=PE('C:/Games/Fallout 4/Fallout4.exe');native=PE(ROOT/'F4SE/Plugins/FPVDroneNative.dll')
+    game=PEImage(args.game_root/'Fallout4.exe');native=PEImage(ROOT/'F4SE/Plugins/FPVDroneNative.dll')
     check(sha(ROOT/'F4SE/Plugins/FPVDroneNative.dll')=='5ae7afd93592faa14494ce22f4f9491e2e57d6bc2ce22696ba77948b6a5af6c9','original flight DLL pinned')
     dis=Cs(CS_ARCH_X86,CS_MODE_64);dis.detail=True
     for name in ['Frame','End']:

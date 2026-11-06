@@ -51,7 +51,6 @@ volatile LONG gInstallAttempt = 0;
 volatile LONG gStop = 0;
 volatile LONG gRuntimeStarted = 0; // 0 waiting, 1 activating, 2 worker started.
 volatile LONG gWorkerStarted = 0;
-HMODULE gSelf = nullptr;
 SRWLOCK gLock = SRWLOCK_INIT;
 SRWLOCK gLogLock = SRWLOCK_INIT;
 char gBridgeStatus[192] = "Waiting for save load or new game; controller initialization deferred";
@@ -510,7 +509,7 @@ extern "C" __declspec(dllexport) bool F4SEPlugin_Load(const F4SEInterface* f4se)
 }
 extern "C" __declspec(dllexport) HMODULE FPVDroneController_InputModule() { return fpv::ControllerModule(); }
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID) {
-    if (reason == DLL_PROCESS_ATTACH) { gSelf = instance; DisableThreadLibraryCalls(instance); }
+    if (reason == DLL_PROCESS_ATTACH) DisableThreadLibraryCalls(instance);
     else if (reason == DLL_PROCESS_DETACH) InterlockedExchange(&gStop, 1);
     return TRUE;
 }

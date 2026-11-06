@@ -547,7 +547,7 @@ test('hook order: throw settled -> Pipboy -> native; close -> camera -> reveal',
   assert.ok(finish.indexOf('fpvtransitionreset') > finish.indexOf('restoreplayerview'));
   assert.equal(calls('RegisterHotkeys')[0], 'fpvtransitionregistercancel');
   assert.equal(calls('OnAnimationEvent')[0], 'fpvtransitionanimationevent');
-  const baseline = parse(fs.readFileSync(path.join(root, '_build/baseline/0.1.28/Scripts/FPVDroneQuestScript.pex')));
+  const baseline = parse(fs.readFileSync(path.join(root, 'Source/Legacy/0.1.28/Scripts/FPVDroneQuestScript.pex')));
   const originalSpend = baseline.objects[0].states[0].functions.find(f => f.name === 'SpendWeaponThrow');
   const updatedSpend = functions.get('spendweaponthrow');
   assert.deepEqual(updatedSpend.locals.slice(0, -3), originalSpend.locals);
@@ -709,7 +709,7 @@ test('each new transition resets notification ownership before opening the Pip-B
   vm.cleanup('test teardown'); vm.assertClean();
 });
 test('launch diagnostics insert calls without changing original status/abort/finish control flow', () => {
-  const previous = parse(fs.readFileSync(path.join(root, '_build/baseline/0.1.35/Scripts/FPVDroneQuestScript.pex'))).objects[0];
+  const previous = parse(fs.readFileSync(path.join(root, 'Tests/Fixtures/0.1.35/Scripts/FPVDroneQuestScript.pex'))).objects[0];
   const previousFunctions = new Map(previous.states.flatMap(s => s.functions).map(f => [key(f.name), f]));
   const diagnostics = new Set(['fpvtransitionrecordstatus', 'fpvtransitionrecordabort', 'fpvtransitionrecordfinish']);
   const normalized = code => {
@@ -852,7 +852,7 @@ test('throw completion: paid release still launches without diagnostic I/O', () 
   assert.deepEqual(vm.log.map(e => e.type), ['launch']); assert.equal(vm.ini.size, 0);
 });
 test('throw helpers preserve every original Arm/Finish instruction and branch', () => {
-  const previous = parse(fs.readFileSync(path.join(root, '_build/baseline/0.1.36/Scripts/FPVDroneQuestScript.pex'))).objects[0];
+  const previous = parse(fs.readFileSync(path.join(root, 'Tests/Fixtures/0.1.36/Scripts/FPVDroneQuestScript.pex'))).objects[0];
   for (const name of ['ArmWeaponThrow', 'FinishWeaponThrow', 'ResetWeaponThrow'])
     assert.deepEqual(normalizeThrowHooks(functions.get(key(name)).code), previous.states[0].functions.find(f => f.name === name).code, name);
 });

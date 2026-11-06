@@ -28,8 +28,9 @@ Zig 0.13.0; its default path is
 local installation. See [../Controllers/README.md](../Controllers/README.md)
 for the standalone native build.
 Close Fallout 4 before installing the result. Build output is under
-`_build/launch_transition`; the unmodified original PEX and its original manifest
-are under `_build/baseline/0.1.28`.
+`_build/launch_transition`; the unmodified original PEX and ESP are under
+`Source/Legacy/0.1.28`. Their hashes are listed in
+`Tests/Fixtures/FILE_MANIFEST.sha256` using repository-relative paths.
 
 The merger checks the original SHA-256, preserves all existing saved variables,
 properties and unrelated functions, and relocates relative branches at hook

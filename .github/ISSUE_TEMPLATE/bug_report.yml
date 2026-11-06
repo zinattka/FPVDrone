@@ -1,0 +1,35 @@
+name: Bug report / Ошибка
+description: Report a reproducible mod issue
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Fallout 4, FPV Drone, F4SE, Garden of Eden, MCM
+    validations:
+      required: true
+  - type: dropdown
+    id: game_input
+    attributes:
+      label: Fallout 4 global input mode
+      options:
+        - Keyboard and mouse
+        - Gamepad
+    validations:
+      required: true
+  - type: input
+    id: drone_input
+    attributes:
+      label: Drone input selected in MCM and device model
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include camera view, standing/sneaking and whether the correct drone is equipped.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Attach FPVDrone.launch.ini and FPVDroneNative/Controller logs from the failed attempt; include the mod list if relevant.

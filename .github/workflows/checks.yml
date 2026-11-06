@@ -1,0 +1,41 @@
+name: Release checks
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  shipped-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify manifests and execute shipped Papyrus bytecode fixtures
+        run: python Tools/prepare_release.py --check
+
+  controller-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Download and verify Zig 0.13.0
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Path _build -Force | Out-Null
+          Invoke-WebRequest 'https://ziglang.org/download/0.13.0/zig-windows-x86_64-0.13.0.zip' -OutFile _build/zig.zip
+          $expected = 'd859994725ef9402381e557c60bb57497215682e355204d754ee3df75ee3c158'
+          if ((Get-FileHash _build/zig.zip -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) { throw 'Zig checksum mismatch' }
+          Expand-Archive -LiteralPath _build/zig.zip -DestinationPath _build/toolchain
+      - name: Compile bridge and run native probes without executing game code
+        shell: pwsh
+        run: ./Tools/build_controllers.ps1 -ZigPath ./_build/toolchain/zig-windows-x86_64-0.13.0/zig.exe

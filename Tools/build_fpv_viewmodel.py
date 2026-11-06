@@ -1,22 +1,26 @@
 """Extract actual 3D parts from the installed drone NIF, retaining UVs/normals.
 
-Requires the official PyNifly 29.1.0 pure Python/DLL layer under
-_build/deps/pynifly. The original drone NIF/material/textures are read-only.
+Requires the official PyNifly 29.1.0 Python/DLL layer, supplied with
+--pynifly-root, FPV_PYNIFLY_ROOT, or the local _build/deps/pynifly fallback.
+The original drone NIF/material/textures are read-only.
 """
 from pathlib import Path
-import sys,json,math,hashlib
+import argparse,os,sys,json,math,hashlib
 from itertools import product
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'_build/deps/pynifly'))
 sys.path.insert(0,str(ROOT/'Tools'))
-from pyn.pynifly import NifFile
-from pyn.nifdefs import PynBufferTypes
-from pyn.nifconstants import ShaderFlags1FO4,ShaderFlags2FO4,VertexFlags
-from inspect_visual_model import load
-from render_fpv_parts import islands
+from model_geometry import load,islands
 
 def digest(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--pynifly-root',type=Path,default=Path(os.environ.get('FPV_PYNIFLY_ROOT',str(ROOT/'_build/deps/pynifly'))))
+    parser.add_argument('--output-dir',type=Path,default=ROOT/'_build/visuals3d')
+    args=parser.parse_args()
+    sys.path.insert(0,str(args.pynifly_root.resolve()))
+    from pyn.pynifly import NifFile
+    from pyn.nifdefs import PynBufferTypes
+    from pyn.nifconstants import ShaderFlags1FO4,ShaderFlags2FO4,VertexFlags
     source=ROOT/'Meshes/FPVDrone/drone_static.nif'; original=digest(source)
     nif=NifFile(str(source)); shape=nif.shapes[0]
     verts,tris,uvs,normals=shape.verts,shape.tris,shape.uvs,shape.normals
@@ -44,7 +48,7 @@ def main():
             assert sum((closest[k]-point[k])**2 for k in range(3))<.00015**2
             membership.append(group_id)
         else: membership.append(lookup[key])
-    outdir=ROOT/'_build/visuals3d'; outdir.mkdir(exist_ok=True,parents=True)
+    outdir=args.output_dir; outdir.mkdir(exist_ok=True,parents=True)
     target=outdir/'drone_fpv.nif'; result=NifFile()
     # Own BSFadeNode light data: the actor is SetAlpha(0) by Papyrus, so the
     # viewmodel must be a separate rendered scene sibling, not its child.

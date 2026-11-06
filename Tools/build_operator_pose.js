@@ -178,7 +178,7 @@ function cloneIdle(original, index) {
 }
 
 function buildOperatorPose(gameRoot, candidateDir) {
-  const baselinePath = path.join(root, '_build', 'baseline', '0.1.28', 'FPVDrone.esp');
+  const baselinePath = path.join(root, 'Source', 'Legacy', '0.1.28', 'FPVDrone.esp');
   const baseline = fs.readFileSync(baselinePath);
   assert.equal(sha256(baseline), EXPECTED_BASELINE, 'Unexpected baseline ESP');
   const original = inspectMod(baseline);

@@ -1,12 +1,2 @@
-# Preserve exact bytes: SHA-256 manifests and bytecode regression checks depend on them.
+# Manifests cover exact bytes. Disable platform-dependent EOL conversion.
 * -text
-
-*.dll binary
-*.esp binary
-*.pex binary
-*.seq binary
-*.swf binary
-*.nif binary
-*.bgsm binary
-*.dds binary
-*.wav binary

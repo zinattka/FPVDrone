@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const { parse, write } = require('./pex');
 const { buildOperatorPose } = require('./build_operator_pose');
 const root = path.resolve(__dirname, '..');
-const baselinePath = path.join(root, '_build/baseline/0.1.28/Scripts/FPVDroneQuestScript.pex');
+const baselinePath = path.join(root, 'Source/Legacy/0.1.28/Scripts/FPVDroneQuestScript.pex');
 const fragmentPath = path.join(root, '_build/launch_transition/FPVDroneQuestScript.pex');
 const outputPath = path.join(root, '_build/launch_transition/candidate/FPVDroneQuestScript.pex');
 const digest = b => crypto.createHash('sha256').update(b).digest('hex');
